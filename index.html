@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>THE FINAL SUNSET – PART 1 | Cinematic Anime Story Game</title>
+  <meta name="description" content="An original cinematic anime-style emotional story game with exploration, player movement, choices, relationship progression, memory variables, and music.">
+  <meta name="theme-color" content="#070913">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Final Sunset">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 16:9 Aspect Ratio Master Container -->
+  <div id="game-wrapper">
+
+    <!-- Primary Exploration Canvas (1280x720 internal rendering) -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Cinematic Letterbox Bars -->
+    <div class="letterbox-bar letterbox-top"></div>
+    <div class="letterbox-bar letterbox-bottom"></div>
+
+    <!-- Screen Transition Overlay -->
+    <div id="transition-overlay"></div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-notification"></div>
+
+    <!-- Audio Autoplay Policy Gate -->
+    <div id="audio-gate">
+      <h2>THE FINAL SUNSET</h2>
+      <p>Click Anywhere to Enter with Immersive Sound & Music</p>
+      <button class="menu-btn primary" style="margin-top: 10px; width: 180px;">Enter Story</button>
+    </div>
+
+    <!-- UI Overlay Layer -->
+    <div id="ui-layer">
+
+      <!-- Top Bar HUD -->
+      <div id="top-hud">
+        <div class="chapter-badge">
+          <span class="chapter-num" id="hud-chapter-num">CHAPTER 1</span>
+          <span class="chapter-title" id="hud-chapter-title">The Silent Boy</span>
+        </div>
+        <div class="hud-actions">
+          <button class="hud-btn" id="hud-audio-btn"><span>🎵</span> Audio</button>
+          <button class="hud-btn" id="hud-pause-btn"><span>⏸</span> Menu [ESC]</button>
+        </div>
+      </div>
+
+      <!-- Interaction Prompt -->
+      <div id="interaction-prompt">
+        <span class="key-badge">E</span>
+        <span id="prompt-text">Interact</span>
+      </div>
+
+      <!-- Dialogue & Choice Overlay Box -->
+      <div id="dialogue-container">
+        <!-- Branching Choices List (When Active) -->
+        <div id="choices-container"></div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box" id="dialogue-box">
+          <div class="dialogue-portrait" id="dialogue-portrait"></div>
+          <div class="dialogue-content">
+            <span class="speaker-badge" id="speaker-badge">Speaker</span>
+            <div class="dialogue-text" id="dialogue-text">...</div>
+          </div>
+          <div class="dialogue-continue-prompt" id="dialogue-continue">
+            <span>▼</span> Click or Space
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Smartphone Overlay Modal -->
+    <div id="phone-modal">
+      <div class="smartphone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-status-bar">
+          <span id="phone-clock">10:45 PM</span>
+          <span>5G • 88% 🔋</span>
+        </div>
+        <div class="phone-header">
+          <div class="phone-contact-avatar" id="phone-contact-avatar">🌸</div>
+          <div class="phone-contact-info">
+            <div class="phone-contact-name" id="phone-contact-name">Charlotte</div>
+            <div class="phone-contact-status">Online • Manila, Philippines</div>
+          </div>
+          <button class="phone-close-btn" id="phone-close-btn" title="Close Phone">✕</button>
+        </div>
+        <div class="phone-chat-body" id="phone-chat-body">
+          <!-- Chat bubbles injected via JS -->
+        </div>
+        <div class="phone-chat-footer">
+          <div class="phone-input-mock">Type a message...</div>
+          <button class="phone-send-btn">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infinity Kingdom Game-Within-a-Game Modal -->
+    <div id="ik-modal">
+      <div class="ik-frame">
+        <div class="ik-header">
+          <div class="ik-title">⚔️ INFINITY KINGDOM ONLINE - SERVER ASIA-1</div>
+          <span style="font-size:12px; color:#a5b4fc;">Connected: Manila & Tamil Nadu Node</span>
+        </div>
+        <div class="ik-body">
+          <div class="ik-game-viewport">
+            <canvas id="ik-viewport-canvas"></canvas>
+          </div>
+          <div class="ik-chat-panel">
+            <div style="padding: 8px 12px; background: rgba(0,0,0,0.4); font-weight: 700; font-size: 11px; color: #a5b4fc;">
+              PARTY CHAT (2/4)
+            </div>
+            <div class="ik-chat-messages" id="ik-chat-messages"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Title Screen -->
+    <div id="title-screen">
+      <div class="title-header">
+        <h1>THE FINAL SUNSET</h1>
+        <div class="subtitle">PART 1 — THE SILENT BOY</div>
+        <div class="tagline">"Sometimes the people who become important to us enter our lives through ordinary moments."</div>
+      </div>
+      <div class="menu-buttons">
+        <button class="menu-btn primary" id="btn-start">Start Journey</button>
+        <button class="menu-btn" id="btn-continue">Continue Story</button>
+        <button class="menu-btn" id="btn-chapter-select">Chapter Select</button>
+        <button class="menu-btn" id="btn-settings">Settings & Audio</button>
+      </div>
+    </div>
+
+    <!-- Pause Menu Modal -->
+    <div class="modal-overlay" id="pause-modal">
+      <div class="modal-box">
+        <h2 class="modal-title">PAUSED</h2>
+        <div class="menu-buttons" style="width: 100%;">
+          <button class="menu-btn primary" id="pause-resume">Resume Story</button>
+          <button class="menu-btn" id="pause-save">Save Game</button>
+          <button class="menu-btn" id="pause-load">Load Game</button>
+          <button class="menu-btn" id="pause-chapters">Chapter Select</button>
+          <button class="menu-btn" id="pause-restart" style="color: #ffab91;">Restart Part 1</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save / Load Slots Modal -->
+    <div class="modal-overlay" id="saveload-modal">
+      <div class="modal-box">
+        <h2 class="modal-title" id="saveload-modal-title">SAVE / LOAD</h2>
+        <div class="slots-grid" id="save-slots-list"></div>
+        <button class="menu-btn" id="saveload-close-btn">Back</button>
+      </div>
+    </div>
+
+    <!-- Chapter Select Modal -->
+    <div class="modal-overlay" id="chapter-select-modal">
+      <div class="modal-box" style="max-width: 780px;">
+        <h2 class="modal-title">SELECT CHAPTER</h2>
+        <div class="chapter-grid" id="chapter-grid"></div>
+        <button class="menu-btn" onclick="document.getElementById('chapter-select-modal').style.display='none'">Back</button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+      <div class="modal-box">
+        <h2 class="modal-title">SETTINGS</h2>
+        <div class="settings-group">
+          <div class="setting-row">
+            <span>Music (BGM) Volume</span>
+            <input type="range" id="setting-bgm-volume" min="0" max="1" step="0.05" value="0.7">
+          </div>
+          <div class="setting-row">
+            <span>Sound Effects (SFX) Volume</span>
+            <input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" value="0.8">
+          </div>
+          <div class="setting-row">
+            <span>Text Typewriter Speed</span>
+            <input type="range" id="setting-text-speed" min="10" max="50" step="5" value="28">
+          </div>
+        </div>
+        <button class="menu-btn" id="settings-close-btn">Done</button>
+      </div>
+    </div>
+
+    <!-- Ending Screen (Part 1 Finale) -->
+    <div id="ending-screen">
+      <div class="ending-title">THE FINAL SUNSET</div>
+      <div class="ending-subtitle">PART 1 — THE END</div>
+      <div class="ending-quote">
+        "Neither of them realized that ordinary night would be their final chat.<br>
+        Some stories do not end with goodbye—they simply wait in the golden light of the sunset."
+      </div>
+      <div class="ending-stats">
+        <div class="stat-item">
+          <span class="stat-label">Friendship Bonds</span>
+          <span class="stat-value" id="stat-friendship">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Love Memories</span>
+          <span class="stat-value" id="stat-love">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Charlotte Connection</span>
+          <span class="stat-value" id="stat-charlotte">0</span>
+        </div>
+      </div>
+      <div class="menu-buttons" style="width: 240px;">
+        <button class="menu-btn primary" id="ending-restart-btn">Play Again</button>
+        <button class="menu-btn" id="ending-title-btn">Title Screen</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/graphics.js"></script>
+  <script src="js/dialogue.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/phone.js"></script>
+  <script src="js/mpc.js"></script>
+  <script src="js/touch-controls.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Service Worker Registration for Offline Mobile / APK execution -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('[SW] ServiceWorker registered with scope:', reg.scope);
+        }).catch((err) => {
+          console.log('[SW] ServiceWorker registration failed:', err);
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>

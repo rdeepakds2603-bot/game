@@ -1,0 +1,32 @@
+{
+  "name": "The Final Sunset – Part 1",
+  "short_name": "Final Sunset",
+  "description": "An original cinematic anime-style emotional story game with exploration, choices, and atmospheric music.",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#070913",
+  "theme_color": "#070913",
+  "prefer_related_applications": false,
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

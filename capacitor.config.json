@@ -1,0 +1,35 @@
+{
+  "appId": "com.thefinalsunset.game",
+  "appName": "The Final Sunset",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "backgroundColor": "#070913",
+    "buildOptions": {
+      "keystorePath": "",
+      "releaseType": "APK"
+    }
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#070913",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#070913",
+      "overlaysWebView": true
+    },
+    "ScreenOrientation": {
+      "orientation": "landscape"
+    }
+  }
+}
