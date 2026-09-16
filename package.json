@@ -2,9 +2,8 @@
   "name": "the-final-sunset",
   "version": "1.0.0",
   "description": "The Final Sunset - Cinematic Anime Story Game (Mobile & Android APK Edition)",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node local-server.js",
     "cap:add:android": "npx @capacitor/cli add android",
     "cap:sync": "npx @capacitor/cli sync",
     "cap:open": "npx @capacitor/cli open android",
